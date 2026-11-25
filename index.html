@@ -37,5 +37,31 @@
       <div class="film__vignette"></div>
       <div class="film__grain"></div>
     </div>
+
+     <section class="hero" id="hero">
+      <div class="hero__back" aria-hidden="true"></div>
+      <div class="hero__float" data-hero-float>
+        <div class="hero__canvas" data-hero-canvas>
+          <picture>
+            <source media="(max-width: 900px)" srcset="assets/images/hero-poster-sm.jpg" />
+            <img class="hero__poster" src="assets/images/hero-poster.jpg" alt="" fetchpriority="high" decoding="async" />
+          </picture>
+          <span class="hero__cup-anchor" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="hero__layers" data-hero-layers aria-hidden="true"></div>
+      <div class="hero__shade" data-hero-shade aria-hidden="true"></div>
+      <div class="hero__portal" data-hero-portal aria-hidden="true"></div>
+      <canvas class="hero__dust" aria-hidden="true"></canvas>
+
+      <p class="hero__caption" data-reveal="copy" data-i18n="caption">Too late to save Wonderland</p>
+
+      <div class="hero__actions" data-reveal="actions">
+        <button class="btn btn--gold" type="button" data-role="begin" data-i18n="begin" disabled>Begin with sound</button>
+      </div>
+
+      <p class="hero__cue" data-role="cue" hidden></p>
+    </section>
+
 </body>
 </html>
