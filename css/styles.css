@@ -404,3 +404,37 @@ html[lang='ar'] .hero__cue { letter-spacing: 0; text-transform: none; font-famil
   51% { transform-origin: bottom; }
   100% { transform: scaleY(0.2); transform-origin: bottom; opacity: 0.2; }
 }
+
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0.8rem 1.6rem;
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), opacity 0.3s;
+}
+html[lang='ar'] .btn { font-family: var(--font-ar); font-size: 1.05rem; letter-spacing: 0; text-transform: none; font-weight: 700; }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn--gold {
+  color: #2a0c10;
+  background: linear-gradient(180deg, #f6e3ad, #c49a52);
+  border: 1px solid #f3dca0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.btn--gold:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), 0 0 22px rgba(201, 162, 92, 0.4); }
+.btn--ghost {
+  color: var(--ivory);
+  background: rgba(10, 4, 6, 0.4);
+  border: 1px solid rgba(201, 162, 92, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.btn--ghost:hover { background: rgba(142, 20, 39, 0.35); }
