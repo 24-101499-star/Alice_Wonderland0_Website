@@ -46,3 +46,146 @@
   font-weight: 700; font-style: normal; font-display: swap;
   unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+060C, U+061B, U+061F;
 }
+:root {
+  --black: #060203;
+  --charcoal: #140a0d;
+  --crimson-deep: #4a0812;
+  --crimson: #8e1427;
+  --crimson-hi: #c42a40;
+  --gold: #c9a25c;
+  --gold-hi: #f3dca0;
+  --ivory: #f3e7cc;
+  --ivory-soft: rgba(243, 231, 204, 0.82);
+  --paper-hi: #f5ecd3;
+  --paper-mid: #e9d9b2;
+  --paper-lo: #d8bf8e;
+  --ink: #2a1710;
+  --ink-soft: #4d3024;
+  --ink-title: #5c0c18;
+
+  --font-display: 'Cinzel', 'Amiri', Georgia, serif;
+  --font-body: 'EB Garamond', 'Amiri', Georgia, serif;
+  --font-ar: 'Amiri', 'Noto Naskh Arabic', 'Traditional Arabic', serif;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius: 4px;
+  --wipe: 0;
+  --open: 0;
+}
+
+
+html[lang='ar'] {
+  --font-display: 'Amiri', 'Noto Naskh Arabic', serif;
+  --font-body: 'Amiri', 'Noto Naskh Arabic', serif;
+}
+
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+html {
+  background: var(--black);
+  color: var(--ivory);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: auto;
+}
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--black);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 3px;
+}
+p, h1, h2 { margin: 0; }
+[hidden] { display: none !important; }
+
+.stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--black);
+  isolation: isolate;
+}
+.spacer {
+  position: relative;
+  width: 100%;
+  pointer-events: none;
+}
+
+.film {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--black);
+  /* Revealed through a circular opening that grows from the teacup (set by main.js). */
+  clip-path: circle(0px at 50% 50%);
+}
+.film video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  filter: saturate(1.04) contrast(1.03);
+  background: var(--black);
+}
+.film.is-failed video { display: none; }
+.film.is-failed { background: radial-gradient(ellipse at 50% 40%, #3a0a12, #060203 70%); }
+.film__tint {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(142, 20, 39, 0.10), transparent 60%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.film__darken {
+  position: absolute;
+  inset: 0;
+  background: var(--black);
+  opacity: 0;
+  pointer-events: none;
+}
+.film__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.7) 100%);
+  pointer-events: none;
+}
+.film__grain {
+  position: absolute;
+  inset: -50%;
+  opacity: 0.06;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 0.9s steps(4) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-2%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(8, 2, 4, 0.28), rgba(4, 1, 2, 0.72) 80%);
+  opacity: var(--open);
+  pointer-events: none;
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
