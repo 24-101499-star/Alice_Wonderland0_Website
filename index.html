@@ -11,7 +11,9 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body class="is-loading">
-     <header class="topbar">
+
+  <!-- Persistent controls -->
+  <header class="topbar">
     <button class="ctl ctl--sound" type="button" data-role="sound" aria-pressed="false" data-i18n-aria="soundAria">
       <svg class="ctl__icon" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" />
@@ -27,7 +29,8 @@
       <button type="button" data-lang-option="ar" aria-pressed="false" lang="ar">عربي</button>
     </div>
   </header>
-    <main class="stage" id="stage">
+
+  <main class="stage" id="stage">
 
   
     <div class="film" id="film" aria-hidden="true">
@@ -38,7 +41,8 @@
       <div class="film__grain"></div>
     </div>
 
-     <section class="hero" id="hero">
+    <!-- Opening: the supplied poster inside a living field of Wonderland objects. -->
+    <section class="hero" id="hero">
       <div class="hero__back" aria-hidden="true"></div>
       <div class="hero__float" data-hero-float>
         <div class="hero__canvas" data-hero-canvas>
@@ -62,7 +66,9 @@
 
       <p class="hero__cue" data-role="cue" hidden></p>
     </section>
-  <div class="scrim" aria-hidden="true"></div>
+
+    <!-- Living parchment: the text the reader follows. -->
+    <div class="scrim" aria-hidden="true"></div>
     <article class="parchment" id="parchment" aria-live="polite" style="visibility:hidden">
       <div class="parchment__paper">
         <span class="parchment__corner parchment__corner--tl" aria-hidden="true"></span>
@@ -77,25 +83,35 @@
         <div class="parchment__body" data-role="body"></div>
       </div>
     </article>
-     <div class="chapter-card" data-role="chapter-card" aria-hidden="true" style="visibility:hidden">
+
+    <div class="chapter-card" data-role="chapter-card" aria-hidden="true" style="visibility:hidden">
       <p class="chapter-card__kicker" data-role="kicker"></p>
       <h2 class="chapter-card__title" data-role="title"></h2>
     </div>
+
+    <!-- Closing card -->
     <div class="ending" data-role="ending" style="visibility:hidden">
       <p class="ending__text" data-role="ending-text">To be continued…</p>
       <button class="btn btn--ghost" type="button" data-role="replay" data-i18n="replay">Return to the beginning</button>
     </div>
-      <nav class="rail" data-i18n-aria="railAria" aria-label="Chapters">
+
+    <!-- Chapter rail -->
+    <nav class="rail" data-i18n-aria="railAria" aria-label="Chapters">
       <ol class="rail__list" data-role="rail"></ol>
     </nav>
 
     <div class="progress" aria-hidden="true"><span data-role="progress"></span></div>
-     <div class="loader" data-role="loader" role="status">
+
+    <!-- Loader: non-blocking, the hero is usable while the film buffers -->
+    <div class="loader" data-role="loader" role="status">
       <p class="loader__label" data-i18n="loading">Lighting the lamps</p>
       <div class="loader__track"><span data-role="loader-bar"></span></div>
       <p class="loader__error" data-role="loader-error" hidden data-i18n="loadError">The film could not be loaded.</p>
     </div>
-  </main> <div class="spacer" id="spacer" aria-hidden="true"></div>
+  </main>
+
+  <!-- Scroll length for the whole story. Height is set by js/main.js. -->
+  <div class="spacer" id="spacer" aria-hidden="true"></div>
 
   <script src="vendor/gsap.min.js"></script>
   <script src="vendor/ScrollTrigger.min.js"></script>

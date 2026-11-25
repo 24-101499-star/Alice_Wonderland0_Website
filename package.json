@@ -1,0 +1,12 @@
+{
+  "name": "alice-in-wonderland-too-late",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cinematic scroll story: Alice in Wonderland, Too Late to Save Wonderland (English and Arabic).",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
