@@ -1,3 +1,4 @@
+
 @font-face {
   font-family: 'Cinzel';
   src: url('../assets/fonts/cinzel-latin-400-normal.woff2') format('woff2');
@@ -46,6 +47,8 @@
   font-weight: 700; font-style: normal; font-display: swap;
   unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+060C, U+061B, U+061F;
 }
+
+/* ---------- Tokens ---------- */
 :root {
   --black: #060203;
   --charcoal: #140a0d;
@@ -56,6 +59,8 @@
   --gold-hi: #f3dca0;
   --ivory: #f3e7cc;
   --ivory-soft: rgba(243, 231, 204, 0.82);
+
+  /* Parchment (light surface) and its ink. Contrast of body ink on paper is ~13:1. */
   --paper-hi: #f5ecd3;
   --paper-mid: #e9d9b2;
   --paper-lo: #d8bf8e;
@@ -73,12 +78,10 @@
   --open: 0;
 }
 
-
 html[lang='ar'] {
   --font-display: 'Amiri', 'Noto Naskh Arabic', serif;
   --font-body: 'Amiri', 'Noto Naskh Arabic', serif;
 }
-
 
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -108,6 +111,7 @@ button:focus-visible,
 p, h1, h2 { margin: 0; }
 [hidden] { display: none !important; }
 
+/* ---------- Stage: one fixed cinematic frame; the spacer supplies scroll ---------- */
 .stage {
   position: fixed;
   inset: 0;
@@ -121,6 +125,9 @@ p, h1, h2 { margin: 0; }
   pointer-events: none;
 }
 
+/* ==========================================================================
+   FILM
+   ========================================================================== */
 .film {
   position: absolute;
   inset: 0;
@@ -177,7 +184,7 @@ p, h1, h2 { margin: 0; }
   100% { transform: translate(0, 0); }
 }
 
-
+/* Dark scrim behind the parchment, opacity follows the parchment. */
 .scrim {
   position: absolute;
   inset: 0;
@@ -190,6 +197,9 @@ p, h1, h2 { margin: 0; }
   -webkit-backdrop-filter: blur(1px);
 }
 
+/* ==========================================================================
+   HERO
+   ========================================================================== */
 .hero {
   position: absolute;
   inset: 0;
@@ -291,6 +301,7 @@ p, h1, h2 { margin: 0; }
 .hero__bottle { right: 10%; bottom: 14%; width: clamp(72px, 7vw, 116px); z-index: 1; }
 .hero__rose { right: 22%; bottom: 3%; width: clamp(110px, 12vw, 180px); opacity: 0.9; z-index: 1; }
 
+/* Cards */
 .hero__card {
   position: absolute;
   width: clamp(72px, 7.2vw, 108px);
@@ -305,7 +316,7 @@ p, h1, h2 { margin: 0; }
 .hero__card--3 { left: 18%; top: 60%; rotate: 8deg; }
 .hero__card--4 { right: 26%; top: 56%; rotate: -6deg; }
 
-
+/* Copy: the title is the dominant element, the subtitle supports it. */
 .hero__copy {
   position: absolute;
   inset-inline: 0;
@@ -405,7 +416,7 @@ html[lang='ar'] .hero__cue { letter-spacing: 0; text-transform: none; font-famil
   100% { transform: scaleY(0.2); transform-origin: bottom; opacity: 0.2; }
 }
 
-
+/* ---------- Buttons ---------- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -439,6 +450,9 @@ html[lang='ar'] .btn { font-family: var(--font-ar); font-size: 1.05rem; letter-s
 }
 .btn--ghost:hover { background: rgba(142, 20, 39, 0.35); }
 
+/* ==========================================================================
+   TOPBAR CONTROLS (sound and language)
+   ========================================================================== */
 .topbar {
   position: fixed;
   top: max(14px, env(safe-area-inset-top));
@@ -491,7 +505,9 @@ html[lang='ar'] .ctl__label { font-family: var(--font-ar); font-size: 0.95rem; l
 .ctl--lang button.is-active,
 .ctl--lang button[aria-pressed='true'] { background: var(--gold); color: #1d0a0e; }
 
-
+/* ==========================================================================
+   CHAPTER RAIL
+   ========================================================================== */
 .rail {
   position: fixed;
   inset-inline-end: 18px;
@@ -540,7 +556,9 @@ html[lang='ar'] .rail__label { font-family: var(--font-ar); font-size: 1rem; }
 .rail__item.is-active { color: var(--gold-hi); }
 .rail__item.is-active .rail__num { background: var(--crimson); border-color: var(--crimson-hi); color: var(--ivory); }
 
-
+/* ==========================================================================
+   PARCHMENT (living story paper)
+   ========================================================================== */
 .parchment {
   position: absolute;
   z-index: 4;
@@ -578,133 +596,684 @@ html[lang='ar'] .rail__label { font-family: var(--font-ar); font-size: 1rem; }
   scrollbar-color: rgba(92, 12, 24, 0.5) transparent;
   animation: breathe 11s ease-in-out infinite;
 }
+/* Crimson reflection on red-lit chapters */
+.parchment[data-mood='uncanny'] .parchment__paper::after,
+.parchment[data-mood='unease'] .parchment__paper::after,
+.parchment[data-mood='chaos'] .parchment__paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 0%, rgba(178, 29, 51, 0.16), transparent 60%);
+  mix-blend-mode: multiply;
+}
+/* Darker ink on the uncanny and unsettling chapters only, to keep contrast high. */
+.parchment[data-mood='uncanny'],
+.parchment[data-mood='unease'] { --ink-accent: #4a0812; }
+@keyframes breathe {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.015); }
+}
+.parchment__corner {
+  position: absolute;
+  width: 62px;
+  height: 62px;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'><path d='M4 56V18C4 9 9 4 18 4H56' fill='none' stroke='%236b4a2a' stroke-width='1.6'/><path d='M12 56V24C12 17 16 12 24 12H56' fill='none' stroke='%236b4a2a' stroke-width='.8'/><circle cx='18' cy='18' r='3' fill='%236b4a2a'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+}
+.parchment__corner--tl { top: 10px; left: 10px; }
+.parchment__corner--tr { top: 10px; right: 10px; transform: scaleX(-1); }
+.parchment__corner--bl { bottom: 10px; left: 10px; transform: scaleY(-1); }
+.parchment__corner--br { bottom: 10px; right: 10px; transform: scale(-1, -1); }
 
+.parchment__head { text-align: center; margin-bottom: clamp(16px, 2.6vh, 26px); position: relative; }
+.parchment__kicker {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-title);
+  margin-bottom: 0.45rem;
+}
+html[lang='ar'] .parchment__kicker { font-family: var(--font-ar); font-size: 1.05rem; font-weight: 700; letter-spacing: 0; text-transform: none; }
+.parchment__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3.3vw, 2.5rem);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: var(--ink-title);
+}
+html[lang='ar'] .parchment__title { font-size: clamp(1.9rem, 3.8vw, 2.8rem); letter-spacing: 0; line-height: 1.5; }
+.parchment__rule {
+  position: relative;
+  height: 14px;
+  width: min(60%, 260px);
+  margin: 12px auto 0;
+  background: linear-gradient(to right, transparent, rgba(92, 12, 24, 0.75) 40%, rgba(92, 12, 24, 0.75) 60%, transparent) center / 100% 1px no-repeat;
+}
+.parchment__rule::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--ink-title);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
 
-  .parchment__title { font-size: 1rem; }
+/* Body text: the reading surface. Optimised for comfort, not decoration. */
+.parchment__body {
+  font-family: var(--font-body);
+  font-size: clamp(1.2rem, 1.85vw, 1.42rem);
+  line-height: 1.72;
+  color: var(--ink);
+  text-align: start;
+  text-wrap: pretty;
+  max-width: 36em;
+  margin-inline: auto;
+  hyphens: manual;
+}
+.parchment[data-mood='uncanny'] .parchment__body,
+.parchment[data-mood='unease'] .parchment__body { color: #241009; }
+html[lang='ar'] .parchment__body {
+  font-family: var(--font-ar);
+  font-size: clamp(1.35rem, 2.15vw, 1.7rem);
+  line-height: 2.05;
+  letter-spacing: 0;
+  text-align: right;
+  max-width: 38em;
+}
+.word {
+  display: inline-block;
+  will-change: opacity, filter, transform;
+}
+.parchment[data-mood='uncanny'] .word,
+.parchment[data-mood='unease'] .word { color: var(--ink-accent, var(--ink)); }
+.word { opacity: 0; }
 
-  .chapter-card { top: 48px; max-width: 46vw; }
+.chapter-card {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 6;
+  text-align: center;
+  padding-inline: 24px;
+  pointer-events: none;
+  opacity: 0;
+}
+.chapter-card::before {
+  content: '';
+  position: absolute;
+  inset: -40% -10%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(6, 2, 3, 0.7) 0, rgba(6, 2, 3, 0.35) 40%, transparent 70%);
+  z-index: -1;
+}
+.chapter-card__kicker {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #e9b9bf;
+  margin-bottom: 0.9rem;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
+}
+html[lang='ar'] .chapter-card__kicker { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: 1.15rem; font-weight: 700; }
+.chapter-card__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 5.6vw, 4.6rem);
+  line-height: 1.12;
+  letter-spacing: 0.03em;
+  color: var(--ivory);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95), 0 0 24px rgba(142, 20, 39, 0.5);
+}
+html[lang='ar'] .chapter-card__title { letter-spacing: 0; line-height: 1.5; font-size: clamp(2.2rem, 6vw, 4.8rem); }
 
+/* ==========================================================================
+   ENDING
+   ========================================================================== */
+.ending {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.2rem;
+  padding: 24px;
+  text-align: center;
+  opacity: 0;
+}
+.ending__text {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(2.2rem, 6.4vw, 5.2rem);
+  line-height: 1.15;
+  color: var(--ivory);
+  text-shadow: 0 0 26px rgba(178, 29, 51, 0.6), 0 4px 30px rgba(0, 0, 0, 0.9);
+}
+html[lang='ar'] .ending__text { font-family: var(--font-ar); font-style: normal; font-weight: 700; }
 
+/* ==========================================================================
+   PROGRESS and LOADER
+   ========================================================================== */
+.progress {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  height: 3px;
+  z-index: 16;
+  background: rgba(243, 231, 204, 0.12);
+  pointer-events: none;
+}
+.progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, var(--crimson), var(--crimson-hi), var(--gold-hi));
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+html[dir='rtl'] .progress span { transform-origin: right center; background: linear-gradient(to left, var(--crimson), var(--crimson-hi), var(--gold-hi)); }
 
-.parchment__paper { padding: 22px 34px 28px; }
+.loader {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 22px;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-inline: 24px;
+  pointer-events: none;
+  transition: opacity 1s var(--ease-out);
+}
+.loader.is-done { opacity: 0; }
+.loader__label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(243, 231, 204, 0.7);
+}
+html[lang='ar'] .loader__label { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: 0.95rem; }
+.loader__track {
+  width: min(240px, 60vw);
+  height: 2px;
+  background: rgba(243, 231, 204, 0.18);
+  overflow: hidden;
+}
+.loader__track span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--gold-hi);
+  transform: scaleX(0.02);
+  transform-origin: left center;
+  transition: transform 0.6s var(--ease-out);
+}
+html[dir='rtl'] .loader__track span { transform-origin: right center; }
+.loader__error {
+  max-width: 36ch;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #f2b8b8;
+  pointer-events: auto;
+}
+.loader.has-error { opacity: 1; }
 
+/* ==========================================================================
+   BODY STATE
+   ========================================================================== */
+body.is-loading .hero__actions .btn { opacity: 0.45; }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 900px) {
+  .rail__label { display: none; }
+  .rail__item { justify-content: flex-end; }
+}
 @media (max-width: 700px) {
-
-  .parchment__paper { padding: 16px 36px 20px; }
-
+  body { font-size: 1rem; }
+  .hero__prop.hero__stopwatch,
+  .hero__prop.hero__bottle,
+  .hero__prop.hero__rose { display: none; }
+  .hero__card { width: 64px; }
+  .hero__card--1 { left: 4%; top: 13%; }
+  .hero__card--2 { right: 6%; top: 19%; }
+  .hero__card--3 { left: 6%; top: 66%; }
+  .hero__card--4 { right: 8%; top: 64%; }
+  .hero__key { right: 4%; top: 42%; }
+  .hero__cup { top: 66%; }
+  .hero__watch { top: 52%; }
+  .hero__frame { width: 96vw; }
+  .rail { top: auto; bottom: 26px; translate: 0 0; inset-inline-end: 12px; }
+  .rail__list { grid-auto-flow: column; gap: 4px; }
+  .rail__num { font-size: 0.66rem; }
+  .parchment__paper { max-height: 80svh; }
+  .ctl__label { display: none; }
+  .ctl--sound { padding: 0 11px; }
+  .topbar { top: max(10px, env(safe-area-inset-top)); }
+  .loader { bottom: 56px; }
 }
-
 @media (max-height: 560px) and (orientation: landscape) {
-
-  .parchment__paper { padding: 12px 30px 16px; }
-
+  .hero__copy { top: 36px; }
+  .hero__actions { bottom: 84px; }
+  .hero__cue { display: none; }
+  .hero__cup { top: 70%; width: 170px; }
+  .hero__watch { width: 130px; }
 }
 
-@media (max-aspect-ratio: 4/5) {
+/* ==========================================================================
+   RTL: logical properties do most of the work; these handle the rest.
+   ========================================================================== */
+html[dir='rtl'] .hero__key { right: auto; left: 9%; rotate: -28deg; }
+html[dir='rtl'] .hero__stopwatch { left: auto; right: 9%; }
+html[dir='rtl'] .hero__bottle { right: auto; left: 10%; }
+html[dir='rtl'] .hero__rose { right: auto; left: 22%; }
+html[dir='rtl'] .hero__card--1 { left: auto; right: 7%; rotate: 14deg; }
+html[dir='rtl'] .hero__card--2 { right: auto; left: 14%; rotate: -12deg; }
+html[dir='rtl'] .hero__card--3 { left: auto; right: 18%; rotate: -8deg; }
+html[dir='rtl'] .hero__card--4 { right: auto; left: 26%; rotate: 6deg; }
 
-  .parchment { top: 62px; bottom: auto; }
-
-  .chapter-card { top: 62px; }
-
+/* ==========================================================================
+   REDUCED MOTION: keep every word, every checkpoint and every control;
+   remove ambient motion and long choreographies.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .film__grain,
+  .hero__cue-line,
+  .parchment__paper { animation: none !important; }
+  .hero__dust { display: none; }
+  .loader__track span,
+  .progress span { transition: none; }
+  .rail, .loader, .btn, .ctl { transition-duration: 0.01ms !important; }
 }
 
+/* ==========================================================================
+   POSTER HERO (supplied artwork, shown full-bleed)
+   ========================================================================== */
+.hero__art {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform-origin: 50% 45%;
+  will-change: transform, opacity;
+}
+.hero__poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.hero__shade {
+  position: absolute;
+  inset: 0;
+  background: var(--black);
+  opacity: 0;
+  pointer-events: none;
+}
+.hero__caption {
+  position: absolute;
+  inset-inline-start: clamp(16px, 4vw, 56px);
+  bottom: clamp(18px, 5vh, 56px);
+  max-width: 26ch;
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.3vw, 1.05rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  color: var(--ivory);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9);
+  z-index: 3;
+}
+html[lang='ar'] .hero__caption {
+  font-family: var(--font-ar);
+  font-size: clamp(1.1rem, 1.9vw, 1.5rem);
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.8;
+  max-width: 24em;
+}
+.hero__actions {
+  position: absolute;
+  inset-inline-end: clamp(16px, 4vw, 56px);
+  bottom: clamp(18px, 5vh, 56px);
+  display: flex;
+  z-index: 4;
+}
 @media (max-width: 700px) {
-
-  .parchment { top: 60px; bottom: auto; }
-
-  .parchment__paper { max-height: 30svh; }
-
+  .hero__caption { max-width: 20ch; bottom: 92px; }
+  .hero__actions { inset-inline: 0; justify-content: center; bottom: 26px; }
 }
 
-@media (min-width: 701px) and (max-aspect-ratio: 4/5) {
-
-  .parchment { top: 70px; bottom: auto; }
-
+/* Poster canvas: sized to cover the viewport at the poster's own aspect ratio. */
+.hero__canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100vw, calc(100svh * 1.7771));
+  aspect-ratio: 1672 / 941;
+  translate: -50% -50%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.hero__canvas picture,
+.hero__canvas img { display: block; width: 100%; height: 100%; }
+.hero__cup-anchor {
+  position: absolute;
+  left: 47%;
+  top: 66%;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.hero__shade {
+  background: radial-gradient(circle at 47% 66%, #8e1427 0%, #2a060c 40%, #060203 78%);
 }
 
-@media (max-height: 560px) and (orientation: landscape) {
-
-  .parchment__paper { width: min(330px, 36vw); max-height: 72vh; }
-
-  .parchment__body { font-size: 0.85rem; line-height: 1.45; }
-
+/* Floating wrapper: the GSAP hover moves the whole poster up and down. */
+.hero__float {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
 }
 
-@media (max-aspect-ratio: 4/5) {
-
-  .hero__back { filter: blur(16px) saturate(1.2) brightness(0.8); }
-
+/* Begin button: anchored bottom-end so it never sits on the poster's own cue. */
+.hero__actions {
+  inset-inline: auto;
+  inset-inline-end: clamp(16px, 4vw, 56px);
+  inset-inline-start: auto;
+  bottom: clamp(18px, 5vh, 56px);
 }
 
-@media (max-aspect-ratio: 4/5) {
-
-  .parchment.is-bottom { top: auto; bottom: 74px; }
-
-}
-
-@media (min-width: 701px) and (max-aspect-ratio: 4/5) {
-
-  .parchment.is-bottom { top: auto; bottom: 84px; }
-
-}
-
-@media (max-width: 1024px), (max-aspect-ratio: 4/5) {
-
-  .parchment,
-
-  .parchment.is-bottom {
-
-    top: 50%;
-
-    bottom: auto;
-
-    inset-inline: 0;
-
-    translate: 0 -50%;
-
-    display: flex;
-
-    justify-content: center;
-
-    padding-inline: 14px;
-
-  }
-
-  .parchment__paper {
-
-    width: min(560px, 100%);
-
-    max-height: 76svh;
-
-    padding: clamp(22px, 4vw, 34px) clamp(28px, 6vw, 44px);
-
-    opacity: calc(var(--open, 0) \* (1 - var(--fade, 0)));
-
-    transform: translateY(calc(var(--fade, 0) \* 28px));
-
-    overflow: hidden;
-
-  }
-
+/* Phones: more inner margin so the paper ornaments never touch the text. */
+@media (max-width: 700px) {
+  .parchment__paper { padding: 34px 40px 36px; }
   .parchment__corner { width: 40px; height: 40px; }
-
-  .parchment__kicker { font-size: 0.72rem; }
-
-  .parchment__title { font-size: clamp(1.3rem, 3.8vw, 1.75rem); }
-
-  .parchment__body { font-size: clamp(1.05rem, 2.6vw, 1.3rem); line-height: 1.6; }
-
-  html[lang='ar'] .parchment__body { font-size: clamp(1.15rem, 2.9vw, 1.45rem); line-height: 2; }
-
-  html[lang='ar'] .parchment__title { font-size: clamp(1.4rem, 4vw, 1.9rem); }
-
 }
 
+/* Portrait screens: the landscape poster is shown at a width where the whole
+   title fits. Its edges fade into the crimson base, so there are no hard borders. */
+@media (max-aspect-ratio: 4/5) {
+  .hero {
+    background: radial-gradient(ellipse at 50% 46%, #6e0c1c 0%, #2a060c 52%, #060203 92%);
+  }
+  .hero__canvas {
+    width: 154vw;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  }
+}
+
+
+/* ==========================================================================
+   VERSION 2 — living hero, small parchment, portrait-aware focus
+   ========================================================================== */
+
+/* The story no longer covers the scene: the dark scrim is removed. */
+.scrim { display: none; }
+
+/* Focal point for the film (set per chapter by main.js). Used on portrait screens only. */
+.film { --focus-x: 50%; }
+@media (max-aspect-ratio: 4/5) {
+  .film video { object-position: var(--focus-x, 50%) 50%; }
+}
+
+/* ---------- Hero stack ---------- */
+.hero {
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, #5e0a18 0%, #220509 50%, #070203 90%);
+}
+.hero__back {
+  display: none;
+  position: absolute;
+  inset: -4%;
+  background: url('../assets/images/hero-poster-sm.jpg') 50% 45% / cover no-repeat;
+  filter: blur(22px) saturate(1.15) brightness(0.5);
+  transform: scale(1.12);
+  opacity: 0;
+}
+.hero__float {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  will-change: transform;
+}
+.hero__shade { z-index: 2; }
+.hero__portal {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  z-index: 4;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 20deg,
+    rgba(196, 42, 64, 0.95) 60deg,
+    transparent 100deg 150deg,
+    rgba(243, 220, 160, 0.7) 190deg,
+    transparent 230deg 290deg,
+    rgba(142, 20, 39, 0.95) 330deg,
+    transparent 360deg
+  );
+  -webkit-mask-image: radial-gradient(circle closest-side, transparent 58%, #000 68%, #000 92%, transparent 100%);
+          mask-image: radial-gradient(circle closest-side, transparent 58%, #000 68%, #000 92%, transparent 100%);
+  mix-blend-mode: screen;
+  filter: blur(1.5px);
+}
+
+/* Floating objects. Layers read --t and --in, so the scroll and intro drive them without fighting GSAP. */
+.hero__layers {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: calc(var(--in, 1) * (1 - var(--t, 0) * 1.25));
+}
+.hero__fx {
+  position: absolute;
+  width: 0;
+  height: 0;
+  translate: calc(var(--t, 0) * var(--dx, 0) * 1px) calc(var(--t, 0) * var(--dy, 0) * 1px);
+}
+.hero__fx-sway {
+  position: absolute;
+  left: 0;
+  top: 0;
+  translate: -50% 0;
+  will-change: transform;
+}
+.hero__fx-travel { position: relative; will-change: transform; }
+.hero__fx-spin { display: block; will-change: transform; }
+.hero__fx-spin svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+/* Canvas: cover on wide screens; on portrait the sharp poster is shown at a width
+   where the whole title and the teacup fit, with feathered edges over the blurred back. */
+@media (max-aspect-ratio: 4/5) {
+  .hero__back { display: block; }
+  .hero__canvas {
+    width: 116vw;
+    -webkit-mask-image: radial-gradient(ellipse 70% 62% at 50% 50%, #000 62%, transparent 100%);
+            mask-image: radial-gradient(ellipse 70% 62% at 50% 50%, #000 62%, transparent 100%);
+  }
+}
+
+/* ---------- Chapter card: small, top-left, never centred over the scene ---------- */
+.chapter-card {
+  top: clamp(78px, 13vh, 120px);
+  translate: none;
+  inset-inline: auto;
+  inset-inline-start: clamp(16px, 3.4vw, 52px);
+  text-align: start;
+  padding-inline: 0;
+  max-width: min(46vw, 520px);
+}
+.chapter-card::before { display: none; }
+.chapter-card__kicker {
+  font-size: clamp(0.66rem, 0.8vw, 0.78rem);
+  letter-spacing: 0.3em;
+  margin-bottom: 0.4rem;
+}
+html[lang='ar'] .chapter-card__kicker { font-size: 0.95rem; }
+.chapter-card__title {
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.95);
+}
+html[lang='ar'] .chapter-card__title { font-size: clamp(1.4rem, 2.8vw, 2.2rem); line-height: 1.4; letter-spacing: 0; }
+
+/* ---------- Parchment: a small note that unrolls and is written ---------- */
+.parchment {
+  top: auto;
+  bottom: clamp(60px, 11vh, 100px);
+  inset-inline: auto;
+  inset-inline-start: clamp(16px, 3.4vw, 52px);
+  translate: none;
+  display: block;
+  padding: 0;
+}
+.parchment__paper {
+  width: min(390px, 31vw);
+  max-height: 44vh;
+  padding: 20px 24px 22px;
+  border-radius: 3px;
+  overflow: hidden;
+  /* The paper unrolls from the top as --open rises (set by the timeline). */
+  clip-path: inset(0 0 calc((1 - var(--open, 0)) * 100%) 0);
+  transform: none;
+  box-shadow:
+    inset 0 0 40px rgba(90, 50, 20, 0.45),
+    0 16px 40px rgba(0, 0, 0, 0.55);
+}
+.parchment__corner { width: 34px; height: 34px; }
+.parchment__head { margin-bottom: 12px; }
+.parchment__kicker { font-size: 0.66rem; letter-spacing: 0.24em; margin-bottom: 0.3rem; }
+html[lang='ar'] .parchment__kicker { font-size: 0.9rem; }
+.parchment__title { font-size: clamp(1.15rem, 1.7vw, 1.5rem); line-height: 1.25; }
+html[lang='ar'] .parchment__title { font-size: clamp(1.2rem, 1.9vw, 1.55rem); line-height: 1.5; }
+.parchment__rule { margin-top: 8px; height: 10px; width: min(60%, 200px); }
+.parchment__body {
+  font-size: clamp(1rem, 1.2vw, 1.1rem);
+  line-height: 1.62;
+  max-width: none;
+}
+html[lang='ar'] .parchment__body { font-size: clamp(1.1rem, 1.5vw, 1.25rem); line-height: 1.95; }
+
+@media (min-width: 701px) and (max-aspect-ratio: 4/5) {
+  /* Tablet portrait: the note sits lower and a little wider. */
+  .parchment { bottom: 84px; }
+  .parchment__paper { width: min(440px, 56vw); }
+}
+@media (max-width: 700px) {
+  .parchment { inset-inline: 12px; bottom: 74px; }
+  .parchment__paper { width: 100%; max-height: 34svh; padding: 16px 20px 18px; }
+  .parchment__corner { width: 30px; height: 30px; }
+  .parchment__body { font-size: 0.98rem; line-height: 1.55; }
+  .chapter-card { top: 62px; max-width: 80vw; }
+  .chapter-card__title { font-size: 1.2rem; }
+}
 @media (max-height: 560px) and (orientation: landscape) {
+  /* Short landscape phones: the note moves to the right so Alice stays centred. */
+  .parchment { inset-inline-start: auto; inset-inline-end: 12px; bottom: 56px; }
+  .parchment__paper { width: min(420px, 46vw); max-height: 60vh; padding: 14px 18px; }
+  .parchment__body { font-size: 0.9rem; line-height: 1.5; }
+  .parchment__title { font-size: 1rem; }
+  .chapter-card { top: 48px; max-width: 46vw; }
+}
 
+/* Keep the paper ornaments clear of the text on every size. */
+.parchment__paper { padding: 22px 34px 28px; }
+@media (max-width: 700px) {
+  .parchment__paper { padding: 16px 36px 20px; }
+}
+@media (max-height: 560px) and (orientation: landscape) {
+  .parchment__paper { padding: 12px 30px 16px; }
+}
+
+/* Portrait screens: the note sits at the top so the character in the lower half stays visible. */
+@media (max-aspect-ratio: 4/5) {
+  .parchment { top: 62px; bottom: auto; }
+  .chapter-card { top: 62px; }
+}
+@media (max-width: 700px) {
+  .parchment { top: 60px; bottom: auto; }
+  .parchment__paper { max-height: 30svh; }
+}
+@media (min-width: 701px) and (max-aspect-ratio: 4/5) {
+  .parchment { top: 70px; bottom: auto; }
+}
+/* Short landscape phones: a narrower note on the right, so Alice stays in the centre. */
+@media (max-height: 560px) and (orientation: landscape) {
+  .parchment__paper { width: min(330px, 36vw); max-height: 72vh; }
+  .parchment__body { font-size: 0.85rem; line-height: 1.45; }
+}
+/* The blurred backdrop on portrait screens reads as the poster extended, not as a dark void. */
+@media (max-aspect-ratio: 4/5) {
+  .hero__back { filter: blur(16px) saturate(1.2) brightness(0.8); }
+}
+
+/* Portrait: the note moves to the bottom for chapters whose character is in the upper half. */
+@media (max-aspect-ratio: 4/5) {
+  .parchment.is-bottom { top: auto; bottom: 74px; }
+}
+@media (min-width: 701px) and (max-aspect-ratio: 4/5) {
+  .parchment.is-bottom { top: auto; bottom: 84px; }
+}
+
+
+/* ==========================================================================
+   STORY FIRST, THEN THE SCENE — tablet, phone and any portrait screen.
+   Within each checkpoint the story sheet is written in the centre of the
+   screen. When the text is read, the sheet fades out and the scene is shown.
+   Desktop keeps the small note beside the scene.
+   ========================================================================== */
+@media (max-width: 1024px), (max-aspect-ratio: 4/5) {
+  .parchment,
+  .parchment.is-bottom {
+    top: 50%;
+    bottom: auto;
+    inset-inline: 0;
+    translate: 0 -50%;
+    display: flex;
+    justify-content: center;
+    padding-inline: 14px;
+  }
+  .parchment__paper {
+    width: min(560px, 100%);
+    max-height: 76svh;
+    padding: clamp(22px, 4vw, 34px) clamp(28px, 6vw, 44px);
+    opacity: calc(var(--open, 0) * (1 - var(--fade, 0)));
+    transform: translateY(calc(var(--fade, 0) * 28px));
+    overflow: hidden;
+  }
+  .parchment__corner { width: 40px; height: 40px; }
+  .parchment__kicker { font-size: 0.72rem; }
+  .parchment__title { font-size: clamp(1.3rem, 3.8vw, 1.75rem); }
+  .parchment__body { font-size: clamp(1.05rem, 2.6vw, 1.3rem); line-height: 1.6; }
+  html[lang='ar'] .parchment__body { font-size: clamp(1.15rem, 2.9vw, 1.45rem); line-height: 2; }
+  html[lang='ar'] .parchment__title { font-size: clamp(1.4rem, 4vw, 1.9rem); }
+}
+/* Short landscape phones: the sheet is shorter so the text still fits. */
+@media (max-height: 560px) and (orientation: landscape) {
   .parchment__paper { max-height: 84svh; padding: 14px 26px; }
-
   .parchment__body { font-size: 0.95rem; line-height: 1.5; }
-
   .parchment__title { font-size: 1.05rem; }
 }
